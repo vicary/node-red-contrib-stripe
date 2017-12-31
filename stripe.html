@@ -1,0 +1,321 @@
+<script type="text/javascript">
+  RED.nodes.registerType('stripe-config', {
+    category: 'config',
+    defaults: {
+      version: { value: '', required: true },
+      name: { value: '' }
+    },
+    credentials: {
+      secret: { type: 'text' }
+    },
+    label: function() {
+      return this.name || 'Untitled';
+    },
+    labelStyle: function() {
+      return this.name? '': 'node_label_italic';
+    },
+    oneditsave: function() {
+      $('#node-config-input-name').val(`[${this.version}] ${this.credentials.secret.replace(/^(.k_(?:test|live)_\w{2}).+(\w{2})$/, '$1****$2')}`);
+    }
+  });
+</script>
+
+<script type="text/x-red" data-template-name="stripe-config">
+  <div class="form-row">
+    <label for="node-config-input-secret"><i class="fa fa-key"></i> Secret Key</label>
+    <input type="text" id="node-config-input-secret" />
+  </div>
+
+  <div class="form-row">
+    <label for="node-config-input-version"><i class="fa fa-calendar"></i> Version</label>
+    <input type="text" id="node-config-input-version" placeholder="2017-12-14" />
+  </div>
+
+  <input type="hidden" id="node-config-input-name"/>
+</script>
+
+<script type="text/x-red" data-help-name="stripe-config">
+  <p>Credentials for Stripe API connection.</p>
+
+  <p>Required informations is available on your <a href="https://dashboard.stripe.com/account/apikeys">Stripe dashboard</a>, remember to switch on <b>Viewing test data</b> for sandbox mode.</p>
+</script>
+
+<script type="text/javascript">
+  RED.nodes.registerType('stripe', {
+    category: 'stripe',
+    // color: '#00d2f1', // We use closest recommended color with stripe instead
+    color: '#C0DEED',
+    icon: 'white-globe.png', // Don't use their "S" icon before legally granted.
+    inputs: 1,
+    outputs: 1,
+    label: function() {
+      return this.name || 'Stripe';
+    },
+    labelStyle: function() {
+      return this.name? 'node_label_italic': '';
+    },
+    paletteLabel: 'Stripe',
+    defaults: {
+      configNode: { value: '', type: 'stripe-config' },
+      method: { value: '' }
+    }
+  });
+</script>
+
+<script type="text/x-red" data-template-name="stripe">
+  <div class="form-row">
+    <label for="node-input-configNode"><i class="fa fa-tag"></i> API Key</label>
+    <input id="node-input-configNode"/>
+  </div>
+
+  <div class="form-row">
+    <label for="node-input-method"><i class="fa fa-wrench"></i> Method</label>
+    <select id="node-input-method">
+      <option value>Dynamic (msg.topic)</option>
+
+      <optgroup data-i18n="[label]stripe.optgroups.core.balance">
+        <option>balance.retrieve</option>
+        <option>balance.retrieveTransaction</option>
+        <option>balance.listTransactions</option>
+      </optgroup>
+
+      <optgroup data-i18n="[label]stripe.optgroups.core.charges">
+        <option>charges.create</option>
+        <option>charges.retrieve</option>
+        <option>charges.update</option>
+        <option>charges.capture</option>
+        <option>charges.list</option>
+      </optgroup>
+
+      <optgroup data-i18n="[label]stripe.optgroups.core.customers">
+        <option>customers.create</option>
+        <option>customers.retrieve</option>
+        <option>customers.update</option>
+        <option>customers.del</option>
+        <option>customers.list</option>
+      </optgroup>
+
+      <optgroup data-i18n="[label]stripe.optgroups.core.disputes">
+        <option>disputes.retrieve</option>
+        <option>disputes.update</option>
+        <option>disputes.close</option>
+        <option>disputes.list</option>
+      </optgroup>
+
+      <optgroup data-i18n="[label]stripe.optgroups.core.events">
+        <option>events.retrieve</option>
+        <option>events.list</option>
+      </optgroup>
+
+      <optgroup data-i18n="[label]stripe.optgroups.core.file_uploads">
+        <option>fileUploads.create</option>
+        <option>fileUploads.retrieve</option>
+        <option>fileUploads.list</option>
+      </optgroup>
+
+      <optgroup data-i18n="[label]stripe.optgroups.core.payouts">
+        <option>payouts.create</option>
+        <option>payouts.retrieve</option>
+        <option>payouts.update</option>
+        <option>payouts.list</option>
+        <option>payouts.cancel</option>
+      </optgroup>
+
+      <optgroup data-i18n="[label]stripe.optgroups.core.refunds">
+        <option>refunds.create</option>
+        <option>refunds.retrieve</option>
+        <option>refunds.update</option>
+        <option>refunds.list</option>
+      </optgroup>
+
+      <optgroup data-i18n="[label]stripe.optgroups.core.tokens">
+        <option>tokens.create</option>
+        <option>tokens.retrieve</option>
+      </optgroup>
+
+      <optgroup data-i18n="[label]stripe.optgroups.payment_methods.sources">
+        <option>customers.createSource</option>
+        <option>customers.retrieveSource</option>
+        <option>customers.updateSource</option>
+        <option>customers.verifySource</option>
+        <option>customers.deleteSource</option>
+        <option>customers.listSources</option>
+        <option>sources.create</option>
+        <option>sources.retrieve</option>
+        <option>sources.update</option>
+      </optgroup>
+
+      <optgroup data-i18n="[label]stripe.optgroups.payment_methods.cards">
+        <option>customers.createCard</option>
+        <option>customers.retrieveCard</option>
+        <option>customers.updateCard</option>
+        <option>customers.deleteCard</option>
+        <option>customers.listCards</option>
+      </optgroup>
+
+      <optgroup data-i18n="[label]stripe.optgroups.subscriptions.subscriptions">
+        <option>subscriptions.create</option>
+        <option>subscriptions.retrieve</option>
+        <option>subscriptions.update</option>
+        <option>subscriptions.del</option>
+        <option>subscriptions.list</option>
+        <option>subscriptionItems.create</option>
+        <option>subscriptionItems.retrieve</option>
+        <option>subscriptionItems.update</option>
+        <option>subscriptionItems.del</option>
+        <option>subscriptionItems.list</option>
+      </optgroup>
+
+      <optgroup data-i18n="[label]stripe.optgroups.subscriptions.coupons">
+        <option>coupons.create</option>
+        <option>coupons.retrieve</option>
+        <option>coupons.update</option>
+        <option>coupons.del</option>
+        <option>coupons.list</option>
+      </optgroup>
+
+      <optgroup data-i18n="[label]stripe.optgroups.subscriptions.discounts">
+        <option>customers.deleteDiscount</option>
+        <option>subscriptions.deleteDiscount</option>
+      </optgroup>
+
+      <optgroup data-i18n="[label]stripe.optgroups.subscriptions.invoices">
+        <option>invoices.create</option>
+        <option>invoices.retrieve</option>
+        <option>invoices.retrieveLines</option>
+        <option>invoices.retrieveUpcoming</option>
+        <option>invoices.update</option>
+        <option>invoices.pay</option>
+        <option>invoices.list</option>
+        <option>invoiceItems.create</option>
+        <option>invoiceItems.retrieve</option>
+        <option>invoiceItems.update</option>
+        <option>invoiceItems.del</option>
+        <option>invoiceItems.list</option>
+      </optgroup>
+
+      <optgroup data-i18n="[label]stripe.optgroups.subscriptions.plans">
+        <option>plans.create</option>
+        <option>plans.retrieve</option>
+        <option>plans.update</option>
+        <option>plans.del</option>
+        <option>plans.list</option>
+      </optgroup>
+
+      <optgroup data-i18n="[label]stripe.optgroups.connect.accounts">
+        <option>accounts.create</option>
+        <option>accounts.retrieve</option>
+        <option>accounts.update</option>
+        <option>accounts.del</option>
+        <option>accounts.reject</option>
+        <option>accounts.list</option>
+        <option>accounts.createLoginLink</option>
+      </optgroup>
+
+      <optgroup data-i18n="[label]stripe.optgroups.connect.application_fees">
+        <option>applicationFees.createRefund</option>
+        <option>applicationFees.retrieveRefund</option>
+        <option>applicationFees.updateRefund</option>
+        <option>applicationFees.listRefunds</option>
+        <option>applicationFees.listRefunds</option>
+        <option>applicationFees.retrieve</option>
+        <option>applicationFees.list</option>
+      </optgroup>
+
+      <optgroup data-i18n="[label]stripe.optgroups.connect.country_specs">
+        <option>countrySpecs.list</option>
+        <option>countrySpecs.retrieve</option>
+      </optgroup>
+
+      <optgroup data-i18n="[label]stripe.optgroups.connect.external_accounts">
+        <option>accounts.createExternalAccount</option>
+        <option>accounts.retrieveExternalAccount</option>
+        <option>accounts.updateExternalAccount</option>
+        <option>accounts.deleteExternalAccount</option>
+        <option>accounts.listExternalAccounts</option>
+      </optgroup>
+
+      <optgroup data-i18n="[label]stripe.optgroups.connect.recipients">
+        <option>recipients.create</option>
+        <option>recipients.retrieve</option>
+        <option>recipients.update</option>
+        <option>recipients.del</option>
+        <option>recipients.list</option>
+      </optgroup>
+
+      <optgroup data-i18n="[label]stripe.optgroups.connect.transfers">
+        <option>transfers.create</option>
+        <option>transfers.retrieve</option>
+        <option>transfers.update</option>
+        <option>transfers.list</option>
+        <option>transfers.createReversal</option>
+        <option>transfers.retrieveReversal</option>
+        <option>transfers.updateReversal</option>
+        <option>transfers.listReversals</option>
+      </optgroup>
+
+      <optgroup data-i18n="[label]stripe.optgroups.relay.orders">
+        <option>orders.create</option>
+        <option>orders.retrieve</option>
+        <option>orders.update</option>
+        <option>orders.pay</option>
+        <option>orders.list</option>
+        <option>orders.returnOrder</option>
+      </optgroup>
+
+      <optgroup data-i18n="[label]stripe.optgroups.relay.products">
+        <option>products.create</option>
+        <option>products.retrieve</option>
+        <option>products.update</option>
+        <option>products.list</option>
+        <option>products.del</option>
+      </optgroup>
+
+      <optgroup data-i18n="[label]stripe.optgroups.relay.returns">
+        <option>orderReturns.retrieve</option>
+        <option>orderReturns.list</option>
+      </optgroup>
+
+      <optgroup data-i18n="[label]stripe.optgroups.relay.skus">
+        <option>skus.create</option>
+        <option>skus.retrieve</option>
+        <option>skus.update</option>
+        <option>skus.list</option>
+        <option>skus.del</option>
+      </optgroup>
+    </select>
+  </div>
+</script>
+
+<script type="text/x-red" data-help-name="stripe">
+  <p>Make an API request to Stripe.</p>
+
+  <h3>Inputs</h3>
+  <dl class="message-properties">
+    <dt>topic<span class="property-type">string</span></dt>
+    <dd>If a method is not chosen, this will be used as method name.</dd>
+    <dt>payload<span class="property-type">array</span></dt>
+    <dd>Array of arguments provided to target API method.</dd>
+  </dl>
+
+  <h3>Outputs</h3>
+  <dl class="message-properties">
+    <dt>payload<span class="property-type">object</span></dt>
+    <dd>The response from Stripe server.</dd>
+  </dl>
+
+  <h3>Details</h3>
+  <p><code>msg.payload</code> will be used as arguments to invoke designated
+  method, a value of <code>null</code> or <code>undefined</code> will invoke
+  the method without parameters.</p>
+
+  <p>Methods are grouped in best effort to match Stripe's online document</p>
+
+  <p>Exceptions and errors should be caught with a <code>catch</code> node.</p>
+
+  <h3>References</h3>
+  <ul>
+    <li><a href="https://stripe.com/docs/api">Stripe API Reference</a> - Detailed
+    descriptions of each API methods.</li>
+  </ul>
+</script>

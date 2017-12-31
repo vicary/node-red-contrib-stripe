@@ -1,0 +1,20 @@
+{
+  "name": "node-red-contrib-stripe",
+  "description": "Node-Red wrapper for node.js Stripe plugin.",
+  "version": "0.1.0",
+  "author": "Vicary Archangel <denvil@gmail.com>",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/vicary/node-red-contrib-stripe"
+  },
+  "license": "Apache-2.0",
+  "dependencies": {
+    "stripe": "^5.4.0"
+  },
+  "keywords": [ "node-red", "stripe", "payment" ],
+  "node-red": {
+    "nodes": {
+      "stripe": "stripe.js"
+    }
+  }
+}

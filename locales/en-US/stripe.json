@@ -1,0 +1,45 @@
+{
+  "stripe": {
+    "invalid-config": "Please select or create an API configuration node.",
+    "invalid-method": "Specified method __method__ is not provided by Stripe API.",
+    "invalid-request": "Error returned from Stripe during request.",
+    "optgroups": {
+      "core": {
+        "balance": "Core - Balance",
+        "charges": "Core - Charges",
+        "customers": "Core - Customers",
+        "disputes": "Core - Disputes",
+        "events": "Core - Events",
+        "file_uploads": "Core - File Uploads",
+        "payouts": "Core - Payouts",
+        "refunds": "Core - Refunds",
+        "tokens": "Core - Tokens"
+      },
+      "payment_methods": {
+        "sources": "Payment Method - Sources",
+        "cards": "Payment Method - Cards"
+      },
+      "subscriptions": {
+        "subscriptions": "Subscriptions",
+        "coupons": "Subscriptions - Coupons",
+        "discounts": "Subscriptions - Discounts",
+        "invoices": "Subscriptions - Invoices",
+        "plans": "Subscriptions - Plans"
+      },
+      "connect": {
+        "accounts": "Connect - Accounts",
+        "application_fees": "Connect - Application Fees",
+        "country_specs": "Connect - Country Specs",
+        "external_accounts": "Connect - External Accounts",
+        "recipients": "Connect - Recipients",
+        "transfers": "Connect - Transfers"
+      },
+      "relay": {
+        "orders": "Relay - Orders",
+        "products": "Relay - Products",
+        "returns": "Relay - Returns",
+        "skus": "Relay - SKUs"
+      }
+    }
+  }
+}
