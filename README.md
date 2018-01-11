@@ -34,4 +34,4 @@ PRs regarding bugfixes and i18n is always welcomed.
 
 # Copyright and license
 
-&copy; 2017 Vicary Archangel, licenced [Apache 2.0](https://github.com/vicary/node-red-contrib-stripe/blob/master/LICENSE)
+&copy; 2018 Vicary Archangel, licenced [Apache 2.0](https://github.com/vicary/node-red-contrib-stripe/blob/master/LICENSE)
