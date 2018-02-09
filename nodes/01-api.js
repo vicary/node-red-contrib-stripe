@@ -43,7 +43,9 @@ module.exports = function StripeApi(RED) {
           node.send(msg);
         })
         .catch(err=> {
-          node.error(RED._('stripe.invalid-request'), err);
+          msg.error = err;
+
+          node.error(RED._('stripe.invalid-request'), msg);
         });
     });
 
