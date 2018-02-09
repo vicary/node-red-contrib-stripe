@@ -49,7 +49,7 @@
     inputs: 1,
     outputs: 1,
     label: function() {
-      return this.name || 'Stripe';
+      return this.name || this.method || 'Stripe';
     },
     labelStyle: function() {
       return this.name? 'node_label_italic': '';
@@ -284,6 +284,11 @@
         <option>skus.del</option>
       </optgroup>
     </select>
+  </div>
+
+  <div class="form-row">
+    <label for="node-input-name"><i class="icon-tag"></i> Name</label>
+    <input type="text" id="node-input-name" placeholder="Name">
   </div>
 </script>
 
