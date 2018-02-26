@@ -9,9 +9,13 @@
   },
   "license": "Apache-2.0",
   "dependencies": {
-    "stripe": "^5.4.0"
+    "stripe": "^5.5.0"
   },
-  "keywords": [ "node-red", "stripe", "payment" ],
+  "keywords": [
+    "node-red",
+    "stripe",
+    "payment"
+  ],
   "node-red": {
     "nodes": {
       "stripe": "stripe.js"
