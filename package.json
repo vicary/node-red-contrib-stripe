@@ -1,7 +1,7 @@
 {
   "name": "node-red-contrib-stripe",
   "description": "Node-Red wrapper for node.js Stripe plugin.",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "author": "Vicary Archangel <vicary.archangel@member.mensa.org>",
   "repository": {
     "type": "git",
