@@ -1,6 +1,6 @@
 // 00-config.js: Config Node for Stirpe API credentials.
 
-let Stripe = require('stripe');
+const Stripe = require('stripe');
 
 module.exports = function StripeConfig(RED) {
   return function StripeConfigNode(config) {
@@ -13,7 +13,7 @@ module.exports = function StripeConfig(RED) {
 
       stripe.setAppInfo({
         name: "node-red-contrib-stripe",
-        version: "0.1.0",
+        version: "1.0.0",
         url: "https://www.github.com/vicary/node-red-contrib-stripe"
       });
 
