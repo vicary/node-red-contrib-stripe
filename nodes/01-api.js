@@ -1,8 +1,8 @@
 // 01-api.js: Node for Stripe RESTful API requests.
 
 module.exports = function StripeApi(RED) {
-  return function StripeApiNode({ method: configMethod, configNode, ...config }) {
-    RED.nodes.createNode(this, { method: configMethod, configNode, ...config });
+  return function StripeApiNode({ method: nodeMethod, configNode, ...config }) {
+    RED.nodes.createNode(this, { method: nodeMethod, configNode, ...config });
 
     let active = true;
     let stripe;
@@ -19,18 +19,21 @@ module.exports = function StripeApi(RED) {
     this.on('input', async msg => {
       this.status({});
 
-      const [
-        thatName,
-        methodName,
-      ] = (configMethod || msg.topic).split('.');
-      const {
-        [thatName]: that,
-        [thatName]: { [methodName]: method } = {},
-      } = stripe;
+      const [that, method] = (() => {
+        let that = (nodeMethod || msg.topic).split('.');
+        const method = that.pop();
+
+        that = that.join('.');
+
+        return [
+          RED.util.getObjectProperty(that),
+          RED.util.getObjectProperty(that + '.' + method),
+        ];
+      })();
 
       if (typeof method !== 'function') {
-        this.error(RED._('stripe.invalid-method', { method: `${thatName}.${methodName}` }));
-        this.status({ fill: 'red', shape: 'dot', text: `Method ${thatName}.${methodName} doesn't exist.` });
+        this.error(RED._('stripe.invalid-method', { method: `${method.join('.')}` }));
+        this.status({ fill: 'red', shape: 'dot', text: `Method ${method.join('.')} doesn't exist.` });
         return;
       }
 
