@@ -7,6 +7,8 @@ module.exports = function StripeConfig(RED) {
     RED.nodes.createNode(this, config);
 
     this.version = config.version;
+    this.name = config.name;
+    this.maskedSecret = config.maskedSecret;
 
     this.getInstance = function() {
       stripe = new Stripe(this.credentials.secret);
