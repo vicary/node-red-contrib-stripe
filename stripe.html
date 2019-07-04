@@ -2,21 +2,30 @@
   RED.nodes.registerType('stripe-config', {
     category: 'config',
     defaults: {
-      version: { value: '', required: true },
-      name: { value: '' }
+      version: { value: '2019-05-16' },
+      maskedSecret: { value: '' },
+      name: { value: '' },
     },
     credentials: {
       secret: { type: 'text' }
     },
     label: function() {
-      return this.name || 'Untitled';
+      const {
+        name,
+        version,
+        maskedSecret,
+      } = this;
+
+      return name || `[${version}] ${maskedSecret}`;
     },
     labelStyle: function() {
       return this.name? '': 'node_label_italic';
     },
     oneditsave: function() {
-      $('#node-config-input-name').val(`[${this.version}] ${this.credentials.secret.replace(/^(.k_(?:test|live)_\w{2}).+(\w{2})$/, '$1****$2')}`);
-    }
+      $('#node-config-input-maskedSecret').val(
+        $('#node-config-input-secret').val().replace(/^(.k_(?:test|live)_\w{2}).+(\w{2})$/, '$1****$2')
+      );
+    },
   });
 </script>
 
@@ -28,10 +37,15 @@
 
   <div class="form-row">
     <label for="node-config-input-version"><i class="fa fa-calendar"></i> Version</label>
-    <input type="text" id="node-config-input-version" placeholder="2017-12-14" />
+    <input type="text" id="node-config-input-version" />
   </div>
 
-  <input type="hidden" id="node-config-input-name"/>
+  <div class="form-row">
+    <label for="node-config-name"><i class="fa fa-tag"></i> Name</label>
+    <input type="text" id="node-config-input-name" />
+  </div>
+
+  <input type="hidden" id="node-config-input-maskedSecret" />
 </script>
 
 <script type="text/x-red" data-help-name="stripe-config">
@@ -79,6 +93,11 @@
         <option>balance.listTransactions</option>
       </optgroup>
 
+      <optgroup data-i18n="[label]stripe.optgroups.core.balance_transactions">
+        <option>balanceTransactions.retrieve</option>
+        <option>balanceTransactions.list</option>
+      </optgroup>
+
       <optgroup data-i18n="[label]stripe.optgroups.core.charges">
         <option>charges.create</option>
         <option>charges.retrieve</option>
@@ -107,10 +126,27 @@
         <option>events.list</option>
       </optgroup>
 
-      <optgroup data-i18n="[label]stripe.optgroups.core.file_uploads">
-        <option>fileUploads.create</option>
-        <option>fileUploads.retrieve</option>
-        <option>fileUploads.list</option>
+      <optgroup data-i18n="[label]stripe.optgroups.core.files">
+        <option>files.create</option>
+        <option>files.retrieve</option>
+        <option>files.list</option>
+      </optgroup>
+
+      <optgroup data-i18n="[label]stripe.optgroups.core.file_links">
+        <option>fileLinks.create</option>
+        <option>fileLinks.retrieve</option>
+        <option>fileLinks.update</option>
+        <option>fileLinks.list</option>
+      </optgroup>
+
+      <optgroup data-i18n="[label]stripe.optgroups.core.payment_intents">
+        <option>paymentIntents.create</option>
+        <option>paymentIntents.retrieve</option>
+        <option>paymentIntents.update</option>
+        <option>paymentIntents.confirm</option>
+        <option>paymentIntents.capture</option>
+        <option>paymentIntents.cancel</option>
+        <option>paymentIntents.list</option>
       </optgroup>
 
       <optgroup data-i18n="[label]stripe.optgroups.core.payouts">
@@ -119,6 +155,14 @@
         <option>payouts.update</option>
         <option>payouts.list</option>
         <option>payouts.cancel</option>
+      </optgroup>
+
+      <optgroup data-i18n="[label]stripe.optgroups.core.products">
+        <option>products.create</option>
+        <option>products.retrieve</option>
+        <option>products.update</option>
+        <option>products.list</option>
+        <option>products.del</option>
       </optgroup>
 
       <optgroup data-i18n="[label]stripe.optgroups.core.refunds">
@@ -133,7 +177,13 @@
         <option>tokens.retrieve</option>
       </optgroup>
 
-      <optgroup data-i18n="[label]stripe.optgroups.payment_methods.sources">
+      <optgroup data-i18n="[label]stripe.optgroups.core.payment_methods">
+        <option>paymentMethods.create</option>
+        <option>paymentMethods.retrieve</option>
+        <option>paymentMethods.update</option>
+        <option>paymentMethods.list</option>
+        <option>paymentMethods.attach</option>
+        <option>paymentMethods.detach</option>
         <option>customers.createSource</option>
         <option>customers.retrieveSource</option>
         <option>customers.updateSource</option>
@@ -145,15 +195,77 @@
         <option>sources.update</option>
       </optgroup>
 
-      <optgroup data-i18n="[label]stripe.optgroups.payment_methods.cards">
-        <option>customers.createCard</option>
-        <option>customers.retrieveCard</option>
-        <option>customers.updateCard</option>
-        <option>customers.deleteCard</option>
-        <option>customers.listCards</option>
+      <optgroup data-i18n="[label]stripe.optgroups.checkout.sessions">
+        <option>checkout.sessions.create</option>
+        <option>checkout.sessions.retrieve</option>
       </optgroup>
 
-      <optgroup data-i18n="[label]stripe.optgroups.subscriptions.subscriptions">
+      <optgroup data-i18n="[label]stripe.optgroups.billings.coupons">
+        <option>coupons.create</option>
+        <option>coupons.retrieve</option>
+        <option>coupons.update</option>
+        <option>coupons.del</option>
+        <option>coupons.list</option>
+      </optgroup>
+
+      <optgroup data-i18n="[label]stripe.optgroups.billings.credit_notes">
+        <option>creditNotes.create</option>
+        <option>creditNotes.retrieve</option>
+        <option>creditNotes.update</option>
+        <option>creditNotes.del</option>
+        <option>creditNotes.voidCreditNode</option>
+        <option>creditNotes.list</option>
+      </optgroup>
+
+      <optgroup data-i18n="[label]stripe.optgroups.billings.customers_balance_transactions">
+        <option>customers.createBalanceTransaction</option>
+        <option>customers.retrieveBalanceTransaction</option>
+        <option>customers.updateBalanceTransaction</option>
+        <option>customers.listBalanceTransactions</option>
+      </optgroup>
+
+      <optgroup data-i18n="[label]stripe.optgroups.billings.customers_tax_id">
+        <option>customers.createTaxId</option>
+        <option>customers.retrieveTaxId</option>
+        <option>customers.deleteTaxId</option>
+        <option>customers.listTaxIds</option>
+      </optgroup>
+
+      <optgroup data-i18n="[label]stripe.optgroups.billings.discounts">
+        <option>customers.deleteDiscount</option>
+        <option>subscriptions.deleteDiscount</option>
+      </optgroup>
+
+      <optgroup data-i18n="[label]stripe.optgroups.billings.invoices">
+        <option>invoices.create</option>
+        <option>invoices.retrieve</option>
+        <option>invoices.update</option>
+        <option>invoices.del</option>
+        <option>invoices.finalizeInvoice</option>
+        <option>invoices.pay</option>
+        <option>invoices.sendInvoice</option>
+        <option>invoices.voidInvoice</option>
+        <option>invoices.markUncollectible</option>
+        <option>invoices.listLineItems</option>
+        <option>invoices.retrieveUpcoming</option>
+        <option>invoices.listUpcomingLineItems</option>
+        <option>invoices.list</option>
+        <option>invoiceItems.create</option>
+        <option>invoiceItems.retrieve</option>
+        <option>invoiceItems.update</option>
+        <option>invoiceItems.del</option>
+        <option>invoiceItems.list</option>
+      </optgroup>
+
+      <optgroup data-i18n="[label]stripe.optgroups.billings.plans">
+        <option>plans.create</option>
+        <option>plans.retrieve</option>
+        <option>plans.update</option>
+        <option>plans.del</option>
+        <option>plans.list</option>
+      </optgroup>
+
+      <optgroup data-i18n="[label]stripe.optgroups.billings.subscriptions">
         <option>subscriptions.create</option>
         <option>subscriptions.retrieve</option>
         <option>subscriptions.update</option>
@@ -166,40 +278,16 @@
         <option>subscriptionItems.list</option>
       </optgroup>
 
-      <optgroup data-i18n="[label]stripe.optgroups.subscriptions.coupons">
-        <option>coupons.create</option>
-        <option>coupons.retrieve</option>
-        <option>coupons.update</option>
-        <option>coupons.del</option>
-        <option>coupons.list</option>
+      <optgroup data-i18n="[label]stripe.optgroups.billings.tax_rates">
+        <option>taxRates.create</option>
+        <option>taxRates.retrieve</option>
+        <option>taxRates.update</option>
+        <option>taxRates.list</option>
       </optgroup>
 
-      <optgroup data-i18n="[label]stripe.optgroups.subscriptions.discounts">
-        <option>customers.deleteDiscount</option>
-        <option>subscriptions.deleteDiscount</option>
-      </optgroup>
-
-      <optgroup data-i18n="[label]stripe.optgroups.subscriptions.invoices">
-        <option>invoices.create</option>
-        <option>invoices.retrieve</option>
-        <option>invoices.retrieveLines</option>
-        <option>invoices.retrieveUpcoming</option>
-        <option>invoices.update</option>
-        <option>invoices.pay</option>
-        <option>invoices.list</option>
-        <option>invoiceItems.create</option>
-        <option>invoiceItems.retrieve</option>
-        <option>invoiceItems.update</option>
-        <option>invoiceItems.del</option>
-        <option>invoiceItems.list</option>
-      </optgroup>
-
-      <optgroup data-i18n="[label]stripe.optgroups.subscriptions.plans">
-        <option>plans.create</option>
-        <option>plans.retrieve</option>
-        <option>plans.update</option>
-        <option>plans.del</option>
-        <option>plans.list</option>
+      <optgroup data-i18n="[label]stripe.optgroups.billings.usage_records">
+        <option>usageRecords.create</option>
+        <option>usageRecordSummaries.list</option>
       </optgroup>
 
       <optgroup data-i18n="[label]stripe.optgroups.connect.accounts">
@@ -210,6 +298,9 @@
         <option>accounts.reject</option>
         <option>accounts.list</option>
         <option>accounts.createLoginLink</option>
+        <option>accounts.retrieveCapability</option>
+        <option>accounts.updateCapability</option>
+        <option>accounts.listCapabilities</option>
       </optgroup>
 
       <optgroup data-i18n="[label]stripe.optgroups.connect.application_fees">
@@ -235,12 +326,20 @@
         <option>accounts.listExternalAccounts</option>
       </optgroup>
 
-      <optgroup data-i18n="[label]stripe.optgroups.connect.recipients">
-        <option>recipients.create</option>
-        <option>recipients.retrieve</option>
-        <option>recipients.update</option>
-        <option>recipients.del</option>
-        <option>recipients.list</option>
+      <optgroup data-i18n="[label]stripe.optgroups.connect.persons">
+        <option>accounts.createPerson</option>
+        <option>accounts.retrievePerson</option>
+        <option>accounts.updatePerson</option>
+        <option>accounts.deletePerson</option>
+        <option>accounts.listPersons</option>
+      </optgroup>
+
+      <optgroup data-i18n="[label]stripe.optgroups.connect.topups">
+        <option>topups.create</option>
+        <option>topups.retrieve</option>
+        <option>topups.update</option>
+        <option>topups.list</option>
+        <option>topups.cancel</option>
       </optgroup>
 
       <optgroup data-i18n="[label]stripe.optgroups.connect.transfers">
@@ -254,7 +353,87 @@
         <option>transfers.listReversals</option>
       </optgroup>
 
-      <optgroup data-i18n="[label]stripe.optgroups.relay.orders">
+      <optgroup data-i18n="[label]stripe.optgroups.fraud.early_fraud_warnings">
+        <option>radar.earlyFraudWarnings.retrieve</option>
+        <option>radar.earlyFraudWarnings.list</option>
+      </optgroup>
+
+      <optgroup data-i18n="[label]stripe.optgroups.fraud.reviews">
+        <option>reviews.approve</option>
+        <option>reviews.retrieve</option>
+        <option>reviews.list</option>
+      </optgroup>
+
+      <optgroup data-i18n="[label]stripe.optgroups.fraud.value_lists">
+        <option>radar.valueLists.create</option>
+        <option>radar.valueLists.retrieve</option>
+        <option>radar.valueLists.update</option>
+        <option>radar.valueLists.del</option>
+        <option>radar.valueLists.list</option>
+        <option>radar.valueListItems.create</option>
+        <option>radar.valueListItems.retrieve</option>
+        <option>radar.valueListItems.del</option>
+        <option>radar.valueListItems.list</option>
+      </optgroup>
+
+      <optgroup data-i18n="[label]stripe.optgroups.issuing.authorizations">
+        <option>issuing.authorizations.create</option>
+        <option>issuing.authorizations.retrieve</option>
+        <option>issuing.authorizations.update</option>
+        <option>issuing.authorizations.approve</option>
+        <option>issuing.authorizations.decline</option>
+        <option>issuing.authorizations.list</option>
+      </optgroup>
+
+      <optgroup data-i18n="[label]stripe.optgroups.issuing.cardholders">
+        <option>issuing.cardholders.create</option>
+        <option>issuing.cardholders.retrieve</option>
+        <option>issuing.cardholders.update</option>
+        <option>issuing.cardholders.list</option>
+      </optgroup>
+
+      <optgroup data-i18n="[label]stripe.optgroups.issuing.cards">
+        <option>issuing.cards.create</option>
+        <option>issuing.cards.retrieve</option>
+        <option>issuing.cards.retrieveDetails</option>
+        <option>issuing.cards.update</option>
+        <option>issuing.cards.list</option>
+      </optgroup>
+
+      <optgroup data-i18n="[label]stripe.optgroups.issuing.disputes">
+        <option>issuing.disputes.create</option>
+        <option>issuing.disputes.retrieve</option>
+        <option>issuing.disputes.update</option>
+        <option>issuing.disputes.list</option>
+      </optgroup>
+
+      <optgroup data-i18n="[label]stripe.optgroups.issuing.transactions">
+        <option>issuing.transactions.retrieve</option>
+        <option>issuing.transactions.update</option>
+        <option>issuing.transactions.list</option>
+      </optgroup>
+
+      <optgroup data-i18n="[label]stripe.optgroups.terminal.connection_tokens">
+        <option>terminal.connectionTokens.create</option>
+      </optgroup>
+
+      <optgroup data-i18n="[label]stripe.optgroups.terminal.locations">
+        <option>terminal.locations.create</option>
+        <option>terminal.locations.retrieve</option>
+        <option>terminal.locations.update</option>
+        <option>terminal.locations.del</option>
+        <option>terminal.locations.list</option>
+      </optgroup>
+
+      <optgroup data-i18n="[label]stripe.optgroups.terminal.readers">
+        <option>terminal.readers.create</option>
+        <option>terminal.readers.retrieve</option>
+        <option>terminal.readers.update</option>
+        <option>terminal.readers.del</option>
+        <option>terminal.readers.list</option>
+      </optgroup>
+
+      <optgroup data-i18n="[label]stripe.optgroups.orders.orders">
         <option>orders.create</option>
         <option>orders.retrieve</option>
         <option>orders.update</option>
@@ -263,25 +442,30 @@
         <option>orders.returnOrder</option>
       </optgroup>
 
-      <optgroup data-i18n="[label]stripe.optgroups.relay.products">
-        <option>products.create</option>
-        <option>products.retrieve</option>
-        <option>products.update</option>
-        <option>products.list</option>
-        <option>products.del</option>
-      </optgroup>
-
-      <optgroup data-i18n="[label]stripe.optgroups.relay.returns">
+      <optgroup data-i18n="[label]stripe.optgroups.orders.returns">
         <option>orderReturns.retrieve</option>
         <option>orderReturns.list</option>
       </optgroup>
 
-      <optgroup data-i18n="[label]stripe.optgroups.relay.skus">
+      <optgroup data-i18n="[label]stripe.optgroups.orders.skus">
         <option>skus.create</option>
         <option>skus.retrieve</option>
         <option>skus.update</option>
         <option>skus.list</option>
         <option>skus.del</option>
+      </optgroup>
+
+      <optgroup data-i18n="[label]stripe.optgroups.sigma.scheduled_queries">
+        <option>sigma.ScheduledQueryRuns.retrieve</option>
+        <option>sigma.ScheduledQueryRuns.list</option>
+      </optgroup>
+
+      <optgroup data-i18n="[label]stripe.optgroups.webhooks.webhook_endpoints">
+        <option>webhookEndpoints.create</option>
+        <option>webhookEndpoints.retrieve</option>
+        <option>webhookEndpoints.update</option>
+        <option>webhookEndpoints.list</option>
+        <option>webhookEndpoints.del</option>
       </optgroup>
     </select>
   </div>

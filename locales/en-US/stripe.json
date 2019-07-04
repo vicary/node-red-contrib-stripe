@@ -2,43 +2,75 @@
   "stripe": {
     "invalid-config": "Please select or create an API configuration node.",
     "invalid-method": "Specified method __method__ is not provided by Stripe API.",
-    "invalid-request": "Error returned from Stripe during request.",
+    "invalid-request": "Stripe API request error, use a catch node to acquire details.",
     "optgroups": {
       "core": {
         "balance": "Core - Balance",
+        "balance_transactions": "Core - Balance Transactions",
         "charges": "Core - Charges",
         "customers": "Core - Customers",
         "disputes": "Core - Disputes",
         "events": "Core - Events",
-        "file_uploads": "Core - File Uploads",
+        "files": "Core - Files",
+        "file_links": "Core - FileLinks",
+        "payment_intents": "Core - PaymentIntents",
+        "products": "Core - Products",
         "payouts": "Core - Payouts",
         "refunds": "Core - Refunds",
-        "tokens": "Core - Tokens"
+        "tokens": "Core - Tokens",
+        "payment_methods": "Core - PaymentMethods"
       },
-      "payment_methods": {
-        "sources": "Payment Method - Sources",
-        "cards": "Payment Method - Cards"
+      "checkout": {
+        "sessions": "Checkout - Sessions"
       },
-      "subscriptions": {
-        "subscriptions": "Subscriptions",
-        "coupons": "Subscriptions - Coupons",
-        "discounts": "Subscriptions - Discounts",
-        "invoices": "Subscriptions - Invoices",
-        "plans": "Subscriptions - Plans"
+      "billings": {
+        "coupons": "Billing - Coupons",
+        "credit_notes": "Billing - Credit Notes",
+        "customers_balance_transactions": "Billing - Customers Balance Transactions",
+        "customers_tax_id": "Billing - Customers Tax ID",
+        "discounts": "Billing - Discounts",
+        "invoices": "Billing - Invoices",
+        "plans": "Billing - Plans",
+        "subscriptions": "Billing - Subscriptions",
+        "tax_rates": "Billing - Tax Rates",
+        "usage_records": "Billing - Usage Records"
       },
       "connect": {
         "accounts": "Connect - Accounts",
         "application_fees": "Connect - Application Fees",
         "country_specs": "Connect - Country Specs",
         "external_accounts": "Connect - External Accounts",
-        "recipients": "Connect - Recipients",
+        "persons": "Connect - Persons",
+        "topups": "Connect - Top-ups",
         "transfers": "Connect - Transfers"
       },
-      "relay": {
-        "orders": "Relay - Orders",
-        "products": "Relay - Products",
-        "returns": "Relay - Returns",
-        "skus": "Relay - SKUs"
+      "fraud": {
+        "early_fraud_warnings": "Fraud - Early Fraud Warnings",
+        "reviews": "Fraud - Reviews",
+        "value_lists": "Fraud - Value Lists"
+      },
+      "issuing": {
+        "authorizations": "Issuing - Authorization",
+        "cardholders": "Issuing - Card Holders",
+        "cards": "Issuing - Cards",
+        "disputes": "Issuing - Disputes",
+        "transactions": "Issuing - Transactions"
+      },
+      "terminal": {
+        "connection_tokens": "Terminal - Connection Tokens",
+        "locations": "Terminal - Locations",
+        "readers": "Terminal - Readers"
+      },
+      "orders": {
+        "orders": "Orders - Orders",
+        "returns": "Orders - Returns",
+        "skus": "Orders - SKUs"
+      },
+      "sigma": {
+        "scheduled_queries": "Sigma - Scheduled Queries"
+      },
+      "webhooks": {
+        "webhook_endpoints": "Webhooks - Webhook Endpoints"
       }
     }
   }
