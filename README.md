@@ -1,4 +1,5 @@
 # node-red-contrib-stripe
+
 Node-Red wrapper for node.js Stripe plugin.
 
 # Install
@@ -34,4 +35,4 @@ PRs regarding bugfixes and i18n is always welcomed.
 
 # Copyright and license
 
-&copy; 2018 Vicary Archangel, licenced [Apache 2.0](https://github.com/vicary/node-red-contrib-stripe/blob/master/LICENSE)
+&copy; Vicary Archangel, licenced [Apache 2.0](https://github.com/vicary/node-red-contrib-stripe/blob/master/LICENSE)
