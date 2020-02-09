@@ -16,6 +16,15 @@
     "stripe",
     "payment"
   ],
+  "prettier": {
+    "bracketSpacing": true,
+    "semi": true,
+    "printWidth": 120,
+    "tabWidth": 2,
+    "useTabs": false,
+    "trailingComma": "all",
+    "singleQuote": false
+  },
   "node-red": {
     "nodes": {
       "stripe": "stripe.js"
