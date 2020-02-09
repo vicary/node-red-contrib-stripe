@@ -1,43 +1,38 @@
 <script type="text/javascript">
-  RED.nodes.registerType('stripe-config', {
-    category: 'config',
+  RED.nodes.registerType("stripe-config", {
+    category: "config",
     defaults: {
-      version: { value: '2019-05-16' },
-      maskedSecret: { value: '' },
-      name: { value: '' },
+      maskedSecret: { value: "" },
+      name: { value: "" },
     },
     credentials: {
-      secret: { type: 'text' }
+      apiKey: { type: "text" },
     },
     label: function() {
-      const {
-        name,
-        version,
-        maskedSecret,
-      } = this;
+      const { name, maskedSecret } = this;
 
-      return name || `[${version}] ${maskedSecret}`;
+      return name || `${maskedSecret}`;
     },
     labelStyle: function() {
-      return this.name? '': 'node_label_italic';
+      return this.name ? "" : "node_label_italic";
     },
     oneditsave: function() {
-      $('#node-config-input-maskedSecret').val(
-        $('#node-config-input-secret').val().replace(/^(.k_(?:test|live)_\w{2}).+(\w{2})$/, '$1****$2')
-      );
+      document.querySelector("#node-config-input-maskedSecret").value = document
+        .querySelector("#node-config-input-apiKey")
+        .value.replace(/^(.k_(?:test|live)_\w{2}).+(\w{2})$/, "$1****$2");
     },
   });
 </script>
 
 <script type="text/x-red" data-template-name="stripe-config">
   <div class="form-row">
-    <label for="node-config-input-secret"><i class="fa fa-key"></i> Secret Key</label>
-    <input type="text" id="node-config-input-secret" />
+    <label for="node-config-input-version"><i class="fa fa-calendar"></i> Version</label>
+    <input type="text" value="2019-12-03" disabled />
   </div>
 
   <div class="form-row">
-    <label for="node-config-input-version"><i class="fa fa-calendar"></i> Version</label>
-    <input type="text" id="node-config-input-version" />
+    <label for="node-config-input-apiKey"><i class="fa fa-key"></i> Secret Key</label>
+    <input type="password" id="node-config-input-apiKey" />
   </div>
 
   <div class="form-row">
@@ -55,24 +50,24 @@
 </script>
 
 <script type="text/javascript">
-  RED.nodes.registerType('stripe', {
-    category: 'stripe',
+  RED.nodes.registerType("stripe", {
+    category: "stripe",
     // color: '#00d2f1', // We use closest recommended color with stripe instead
-    color: '#C0DEED',
-    icon: 'white-globe.png', // Don't use their "S" icon before legally granted.
+    color: "#C0DEED",
+    icon: "white-globe.png", // Don't use their "S" icon before legally granted.
     inputs: 1,
     outputs: 1,
     label: function() {
-      return this.name || this.method || 'Stripe';
+      return this.name || this.method || "Stripe";
     },
     labelStyle: function() {
-      return this.name? 'node_label_italic': '';
+      return this.name ? "node_label_italic" : "";
     },
-    paletteLabel: 'Stripe',
+    paletteLabel: "Stripe",
     defaults: {
-      configNode: { value: '', type: 'stripe-config' },
-      method: { value: '' }
-    }
+      configNode: { value: "", type: "stripe-config" },
+      method: { value: "" },
+    },
   });
 </script>
 
@@ -485,6 +480,8 @@
     <dd>If a method is not chosen, this will be used as method name.</dd>
     <dt>payload<span class="property-type">array</span></dt>
     <dd>Array of arguments provided to target API method.</dd>
+    <dt>apiKey<span class="property-type">string</span></dt>
+    <dd>Optional override of the Secret Key in config node.</dd>
   </dl>
 
   <h3>Outputs</h3>
