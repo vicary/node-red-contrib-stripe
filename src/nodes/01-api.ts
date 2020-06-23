@@ -19,7 +19,7 @@ interface StripeApiNodeProperties extends NodeProperties {
 const getStripeInstance = (apiKey: string): Stripe => {
   if (!instanceCache.has(apiKey)) {
     const stripe = new Stripe(apiKey, {
-      apiVersion: "2019-12-03",
+      apiVersion: "2020-03-02",
       appInfo: {
         name,
         version,
@@ -43,7 +43,7 @@ export default function StripeApi(RED: Red) {
     const { apiKey } = RED.nodes.getCredentials(props.configNode) as StripeNodeCredentials;
     let active = true;
 
-    this.on("input", async msg => {
+    this.on("input", async (msg) => {
       this.status({});
 
       const stripe = getStripeInstance(msg.apiKey || apiKey);

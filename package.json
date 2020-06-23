@@ -1,7 +1,7 @@
 {
   "name": "node-red-contrib-stripe",
   "description": "Node-Red wrapper for node.js Stripe plugin.",
-  "version": "0.2.0",
+  "version": "0.2.4",
   "author": "Vicary Archangel <vicary.archangel@member.mensa.org>",
   "repository": {
     "type": "git",
@@ -15,9 +15,12 @@
   ],
   "main": "src/stripe.ts",
   "scripts": {
-    "prebuild": "rm -rf dist",
-    "build": "webpack --mode=production"
+    "prepare": "webpack --mode=production",
+    "postpack": "rm -rf dist/"
   },
+  "files": [
+    "dist/"
+  ],
   "devDependencies": {
     "@types/lru-cache": "^5.1.0",
     "@types/node-red": "^0.20.1",
