@@ -2,8 +2,10 @@
 import { Node, NodeId, NodeProperties, Red } from "node-red";
 import LRU from "lru-cache";
 import Stripe from "stripe";
-import { name, version, repository } from "../../package.json";
+import app from "../../package.json";
 import { StripeNodeCredentials } from "./00-config";
+
+const { name, version, repository } = app;
 
 // sane defaults, up for discussions.
 const instanceCache = new LRU<string, Stripe>({
