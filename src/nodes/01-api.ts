@@ -19,7 +19,7 @@ interface StripeApiNodeProperties extends NodeProperties {
 const getStripeInstance = (apiKey: string): Stripe => {
   if (!instanceCache.has(apiKey)) {
     const stripe = new Stripe(apiKey, {
-      apiVersion: "2020-03-02",
+      apiVersion: "2020-08-27",
       appInfo: {
         name,
         version,

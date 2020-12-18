@@ -27,5 +27,5 @@ module.exports = {
     libraryExport: "default",
     path: path.join(__dirname, "dist"),
   },
-  plugins: [new CopyPlugin([{ from: "public" }])],
+  plugins: [new CopyPlugin({ patterns: ["public"] })],
 };
